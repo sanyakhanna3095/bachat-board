@@ -2,6 +2,7 @@ package com.cg.budgetboard.controller;
 
 import com.cg.budgetboard.dto.AuthenticationRequest;
 import com.cg.budgetboard.dto.RegisterDTO;
+import com.cg.budgetboard.dto.ResetPasswordDTO;
 import com.cg.budgetboard.dto.ResponseDTO;
 import com.cg.budgetboard.services.UserService;
 import jakarta.validation.Valid;
@@ -30,9 +31,15 @@ public class UserController {
         return ResponseEntity.ok(userService.login(request));
     }
 
-    @PostMapping("/forget/{email}")
+    @PostMapping("/forget-password/{email}")
     public ResponseEntity<ResponseDTO> forgetPassword(@PathVariable String email) {
         userService.forgetPassword(email);
         return new ResponseEntity<>(new ResponseDTO("Password reset OTP successfully sent.", null), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResponseDTO> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        userService.resetPassword(resetPasswordDTO);
+        return new ResponseEntity<>(new ResponseDTO("Password reset successfully.", null), HttpStatus.CREATED);
     }
 }

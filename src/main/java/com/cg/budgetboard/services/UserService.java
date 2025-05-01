@@ -3,6 +3,7 @@ package com.cg.budgetboard.services;
 
 import com.cg.budgetboard.dto.AuthenticationRequest;
 import com.cg.budgetboard.dto.RegisterDTO;
+import com.cg.budgetboard.dto.ResetPasswordDTO;
 import com.cg.budgetboard.dto.ResponseDTO;
 import com.cg.budgetboard.exceptionhandler.CustomException;
 import com.cg.budgetboard.model.User;
@@ -84,5 +85,21 @@ public class UserService implements UserInterface {
                 + "\nYour OTP for password reset is: " + otp
                 + "\nPlease use this OTP to set your new password.";
         emailService.sendEmail(user.getEmail(), "Password Reset OTP", message);
+    }
+
+    public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        Optional<User> userOptional = userRepository.findByEmail(resetPasswordDTO.getEmail());
+        if (userOptional.isEmpty()) {
+            throw new CustomException("No user found with email: " + resetPasswordDTO.getEmail());
+        }
+
+        User user = userOptional.get();
+        if (!resetPasswordDTO.getOtp().equals(user.getOtp())) {
+            throw new CustomException("Invalid OTP provided.");
+        }
+
+        user.setPassword(passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
+        user.setOtp(null);
+        userRepository.save(user);
     }
 }
