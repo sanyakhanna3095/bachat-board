@@ -1,10 +1,13 @@
 package com.cg.budgetboard.services;
 
 
+import com.cg.budgetboard.dto.AuthenticationRequest;
 import com.cg.budgetboard.dto.RegisterDTO;
 import com.cg.budgetboard.dto.ResponseDTO;
+import com.cg.budgetboard.exceptionhandler.CustomException;
 import com.cg.budgetboard.model.User;
 import com.cg.budgetboard.repository.UserRepository;
+import com.cg.budgetboard.util.JwtUtility;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,8 @@ public class UserService implements UserInterface {
     private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtUtility jwtUtility;
 
 
 
@@ -48,5 +53,15 @@ public class UserService implements UserInterface {
     public boolean existsByEmail(@NotBlank(message = "Email field can't be empty") @Email String email) {
         log.debug("Checking if user exists using email:{}", email);
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    public String login(AuthenticationRequest authenticationrequest) {
+        User user = userRepository.findByEmail(authenticationrequest.getEmail())
+                .orElseThrow(() -> new CustomException("Invalid email or user not registered."));
+
+        if (!passwordEncoder.matches(authenticationrequest.getPassword(), user.getPassword())) {
+            throw new CustomException("Invalid password.");
+        }
+        return "Token: "+jwtUtility.generateToken(user.getEmail());
     }
 }

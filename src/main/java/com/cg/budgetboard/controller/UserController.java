@@ -1,5 +1,6 @@
 package com.cg.budgetboard.controller;
 
+import com.cg.budgetboard.dto.AuthenticationRequest;
 import com.cg.budgetboard.dto.RegisterDTO;
 import com.cg.budgetboard.dto.ResponseDTO;
 import com.cg.budgetboard.services.UserService;
@@ -25,5 +26,10 @@ public class UserController {
         ResponseDTO responseDTO=userService.registerUser(registerDTO);
 
         return new ResponseEntity<ResponseDTO>(responseDTO, responseDTO.getMessage().equals("error")? HttpStatus.CONFLICT: HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(userService.login(request));
     }
 }
