@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.Random;
+
 @Service
 @Slf4j
 public class UserService implements UserInterface {
@@ -24,7 +27,8 @@ public class UserService implements UserInterface {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private JwtUtility jwtUtility;
-
+    @Autowired
+    private EmailService emailService;
 
 
     @Override
@@ -63,5 +67,22 @@ public class UserService implements UserInterface {
             throw new CustomException("Invalid password.");
         }
         return "Token: "+jwtUtility.generateToken(user.getEmail());
+    }
+
+    public void forgetPassword(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            throw new CustomException("No user found with email: " + email);
+        }
+
+        User user = userOptional.get();
+        String otp = String.valueOf(new Random().nextInt(900000) + 100000);
+        user.setOtp(otp);
+        userRepository.save(user);
+
+        String message = "Dear " + user.getName()
+                + "\nYour OTP for password reset is: " + otp
+                + "\nPlease use this OTP to set your new password.";
+        emailService.sendEmail(user.getEmail(), "Password Reset OTP", message);
     }
 }

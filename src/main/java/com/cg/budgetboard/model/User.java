@@ -33,6 +33,8 @@ public class User implements UserDetails {
     private String password;
 
     private String token;
+
+    private String otp;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
