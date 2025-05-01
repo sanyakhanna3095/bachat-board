@@ -7,5 +7,5 @@ import java.time.LocalDate;
 public @Data class IncomeRequest {
     private Double amount;
     private LocalDate date;
-    private Long categoryId; // send category by ID
+    private Long categoryId; // sending category by ID
 }
