@@ -36,11 +36,10 @@ public class UserService implements UserInterface {
         User user=new User();
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
-        user.setPassword(registerDTO.getPassword());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         userRepository.save(user);
         log.info("User {} registered successfuly!", user.getEmail());
-        res.setMessage("message");
+        res.setMessage("success");
         res.setData("User registered successfuly!");
         return res;
     }
