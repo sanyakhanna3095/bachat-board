@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Budget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
