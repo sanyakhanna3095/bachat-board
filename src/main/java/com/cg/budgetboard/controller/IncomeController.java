@@ -43,4 +43,13 @@ public class IncomeController {
         incomeService.updateIncome(incomeId, incomeRequest, token);
         return ResponseEntity.ok("Income updated successfully.");
     }
+
+    // Delete income
+    @DeleteMapping("/{incomeId}")
+    public ResponseEntity<String> deleteIncome(@PathVariable Long incomeId, HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        String token = (auth!=null)? auth.substring(7):"";
+        incomeService.deleteIncome(incomeId, token);
+        return ResponseEntity.ok("Income deleted successfully.");
+    }
 }
