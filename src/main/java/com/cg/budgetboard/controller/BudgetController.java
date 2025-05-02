@@ -38,4 +38,13 @@ public class BudgetController {
         String token = (auth!=null)? auth.substring(7):"";
         return ResponseEntity.ok(budgetService.updateBudget(id, dto, token));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBudget(@PathVariable Long id,
+                                             HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        String token = (auth!=null)? auth.substring(7):"";
+        budgetService.deleteBudget(id, token);
+        return ResponseEntity.noContent().build();
+    }
 }
