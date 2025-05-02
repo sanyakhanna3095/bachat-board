@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public @Data class RegisterDTO {
     @NotBlank(message = "name can't be empty")
     @Size(min = 3, message = "name must have at least 3 characters")
-    @Pattern(regexp = "^[A-Z][a-zA-Z](?:[\\s-][A-Z][a-zA-Z])*$", message = "Name must start with a capital letter and should only contain alphabets")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]*(?:[\\s-][A-Z][a-zA-Z]*)*$", message = "Name must start with a capital letter and should only contain alphabets")
     private String name;
 
     @NotBlank(message = "Email field can't be empty")
