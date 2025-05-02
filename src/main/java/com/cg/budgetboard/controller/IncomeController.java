@@ -4,6 +4,7 @@ import com.cg.budgetboard.dto.IncomeRequest;
 import com.cg.budgetboard.dto.IncomeResponse;
 import com.cg.budgetboard.services.IncomeService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/incomes")
 public class IncomeController {
+    @Autowired
     private IncomeService incomeService;
 
     // Add income
