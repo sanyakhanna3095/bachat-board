@@ -11,9 +11,6 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "Users")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -21,7 +18,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
