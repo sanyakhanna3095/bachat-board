@@ -39,6 +39,12 @@ public class ExpenseController {
         String token = request.getHeader("Authorization").substring(7);
         return ResponseEntity.ok(expenseService.updateExpense(id, dto, token));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        expenseService.deleteExpense(id, token);
+        return ResponseEntity.noContent().build();
+    }
 
 }
 
