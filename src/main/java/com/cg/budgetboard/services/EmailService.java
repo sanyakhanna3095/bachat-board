@@ -1,22 +1,94 @@
 package com.cg.budgetboard.services;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+
+import java.io.File;
 
 @Controller
 public class EmailService {
+
     @Autowired
     JavaMailSender mailSender;
 
-    public void sendEmail(String toEmail, String subject, String body) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("Budget Board <sakule76@gmail.com>");
-        simpleMailMessage.setTo(toEmail);
-        simpleMailMessage.setText(body);
-        simpleMailMessage.setSubject(subject);
-        mailSender.send(simpleMailMessage);
-        System.out.println("Mail sent to the user!!");
+    public void sendOtpEmail(String toEmail, String otp) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom("Budget Board <harshi766766@gmail.com>");
+            helper.setTo(toEmail);
+            helper.setSubject("Forget Password OTP");
+
+            String content = "<html>" +
+                    "<body style='font-family:Arial, sans-serif; background-color:#f9f9f9; margin:0; padding:0;'>" +
+                    "  <table width='100%' style='max-width:600px; margin:auto; background-color:#ffffff; border:1px solid #ddd;'>" +
+                    "    <tr>" +
+                    "      <td style='text-align:center; padding:10px 0;'>" +
+                    "        <img src='cid:bannerImage' alt='Budget Board Banner' style='width:100%; max-width:600px; height:auto;'/>" +
+                    "      </td>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "      <td style='padding:20px;'>" +
+                    "        <p style='font-size:16px; color:#333;'>Hello From <strong>Budget Board</strong>!</p>" +
+                    "        <p style='font-size:16px; color:#333;'>Your OTP for resetting your password:</p>" +
+                    "        <h2 style='color:#1976d2; font-size:28px;'>" + otp + "</h2>" +
+                    "        <p style='font-size:16px; color:#333;'>Please enter this OTP to reset your account password.</p>" +
+                    "      </td>" +
+                    "    </tr>" +
+                    "  </table>" +
+                    "</body>" +
+                    "</html>";
+
+            helper.setText(content, true);
+            FileSystemResource image = new FileSystemResource(new File("D:\\budget-board\\src\\main\\resources\\banner\\BudgetBoardBanner.PNG")); // ✅ your full path
+            helper.addInline("bannerImage", image);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send OTP email", e);
+        }
+    }
+
+    public void sendAlertEmail(String toEmail, String percentage, String category) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom("Budget Board <harshi766766@gmail.com>");
+            helper.setTo(toEmail);
+            helper.setSubject("Expense Alert From Budget Board");
+
+            String content = "<html>" +
+                    "<body style='font-family:Arial, sans-serif; background-color:#f9f9f9; margin:0; padding:0;'>" +
+                    "  <table width='100%' style='max-width:600px; margin:auto; background-color:#ffffff; border:1px solid #ddd;'>" +
+                    "    <tr>" +
+                    "      <td style='text-align:center; padding:10px 0;'>" +
+                    "        <img src='cid:bannerImage' alt='Budget Board Banner' style='width:100%; max-width:600px; height:auto;'/>" +
+                    "      </td>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "      <td style='padding:20px;'>" +
+                    "        <p style='font-size:16px; color:#333;'>Hello From <strong>Budget Board</strong>!</p>" +
+                    "        <p style='font-size:16px; color:#333;'>You have crossed your <span style='color:red;'>" + percentage + "</span> of budget for category <span style='color:blue;'>" + category + "</span></p>" +
+                    "        <p style='font-size:16px; color:#333;'>Please manage your expenses accordingly.</p>" +
+                    "      </td>" +
+                    "    </tr>" +
+                    "  </table>" +
+                    "</body>" +
+                    "</html>";
+
+            helper.setText(content, true);
+            FileSystemResource image = new FileSystemResource(new File("D:\\budget-board\\src\\main\\resources\\banner\\BudgetBoardBanner.PNG")); // ✅ your full path
+            helper.addInline("bannerImage", image);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send OTP email", e);
+        }
     }
 }
+
