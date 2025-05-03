@@ -84,7 +84,7 @@ public class UserService implements UserInterface {
         String message = "Dear " + user.getName()
                 + "\nYour OTP for password reset is: " + otp
                 + "\nPlease use this OTP to set your new password.";
-        emailService.sendEmail(user.getEmail(), "Password Reset OTP", message);
+        emailService.sendOtpEmail(user.getEmail(), otp);
     }
 
     public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
