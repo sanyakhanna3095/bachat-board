@@ -29,8 +29,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    private String token;
-
     private String otp;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
