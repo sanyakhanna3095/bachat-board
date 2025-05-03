@@ -47,7 +47,7 @@ public class EmailService {
                     "</html>";
 
             helper.setText(content, true);
-            FileSystemResource image = new FileSystemResource(new File("src\\main\\resources\\banner\\BudgetBoardBanner.PNG"));
+            FileSystemResource image = new FileSystemResource(new File("src/main/resources/banner/BudgetboardBanner.png"));
             helper.addInline("bannerImage", image);
             mailSender.send(message);
         } catch (MessagingException e) {
@@ -84,7 +84,7 @@ public class EmailService {
                     "</html>";
 
             helper.setText(content, true);
-            FileSystemResource image = new FileSystemResource(new File("src\\main\\resources\\banner\\BudgetBoardBanner.PNG"));
+            FileSystemResource image = new FileSystemResource(new File("src/main/resources/banner/BudgetboardBanner.png"));
             helper.addInline("bannerImage", image);
             mailSender.send(message);
         } catch (MessagingException e) {
@@ -119,7 +119,7 @@ public class EmailService {
                     "</html>";
 
             helper.setText(content, true);
-            FileSystemResource image = new FileSystemResource(new File("src\\main\\resources\\banner\\BudgetBoardBanner.PNG"));
+            FileSystemResource image = new FileSystemResource(new File("src/main/resources/banner/BudgetboardBanner.png"));
             helper.addInline("bannerImage", image);
 
             helper.addAttachment("report.pdf", new ByteArrayResource(pdfBytes));
