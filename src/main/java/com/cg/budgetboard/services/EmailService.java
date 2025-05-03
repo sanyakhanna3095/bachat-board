@@ -3,6 +3,7 @@ package com.cg.budgetboard.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -88,6 +89,43 @@ public class EmailService {
             mailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send OTP email", e);
+        }
+    }
+
+    public void sendReportEmail(String to, String subject, byte[] pdfBytes) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("Budget Board <sakule76@gmail.com>");
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+            String content = "<html>" +
+                    "<body style='font-family:Arial, sans-serif; background-color:#f9f9f9; margin:0; padding:0;'>" +
+                    "  <table width='100%' style='max-width:600px; margin:auto; background-color:#ffffff; border:1px solid #ddd;'>" +
+                    "    <tr>" +
+                    "      <td style='text-align:center; padding:10px 0;'>" +
+                    "        <img src='cid:bannerImage' alt='Budget Board Banner' style='width:100%; max-width:600px; height:auto;'/>" +
+                    "      </td>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "      <td style='padding:20px;'>" +
+                    "        <p style='font-size:16px; color:#333;'>Hello From <strong>Budget Board</strong>!</p>" +
+                    "        <p style='font-size:16px; color:#333;'>Please find the report attached.</p>" +
+                    "      </td>" +
+                    "    </tr>" +
+                    "  </table>" +
+                    "</body>" +
+                    "</html>";
+
+            helper.setText(content, true);
+            FileSystemResource image = new FileSystemResource(new File("D:\\budget-board\\src\\main\\resources\\banner\\BudgetBoardBanner.PNG")); // ✅ your full path
+            helper.addInline("bannerImage", image);
+
+            helper.addAttachment("report.pdf", new ByteArrayResource(pdfBytes));
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
         }
     }
 }
