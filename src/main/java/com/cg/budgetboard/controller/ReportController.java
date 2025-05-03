@@ -22,4 +22,11 @@ public class ReportController {
         reportService.sendMonthlySummaryReport(month, token);
         return ResponseEntity.ok("Monthly summary report sent.");
     }
+
+    @GetMapping("/trends")
+    public ResponseEntity<String> getSpendingTrends(@RequestParam String month, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        reportService.sendSpendingTrendsReport(month, token);
+        return ResponseEntity.ok("Spending trends report sent.");
+    }
 }

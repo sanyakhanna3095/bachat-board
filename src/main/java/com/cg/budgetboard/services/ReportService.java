@@ -17,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -68,6 +71,51 @@ public class ReportService {
             emailService.sendReportEmail(user.getEmail(), "Monthly Summary Report - " + month, pdf.toByteArray());
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate PDF", e);
+        }
+    }
+
+    public void sendSpendingTrendsReport(String month, String token) {
+        User user = authUtil.getCurrentUser(token);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+        YearMonth ym = YearMonth.parse(month, formatter);
+        LocalDate startDate = ym.atDay(1);
+        LocalDate endDate = ym.atEndOfMonth();
+
+        List<Expense> expenses = expenseRepository.findByUserIdAndDateRange(user.getId(), startDate, endDate);
+
+        Map<String, Double> categoryTotals = new HashMap<>();
+        double totalExpense = 0;
+
+        for (Expense e : expenses) {
+            String category = e.getCategory().getName();
+            categoryTotals.put(category, categoryTotals.getOrDefault(category, 0.0) + e.getAmount());
+            totalExpense += e.getAmount();
+        }
+
+        ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+        try {
+            Document doc = new Document();
+            PdfWriter.getInstance(doc, pdf);
+            doc.open();
+
+            doc.add(new Paragraph("Spending Trends Report (" + month + ")"));
+            List<List<String>> rows = new ArrayList<>();
+
+            for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+                String category = entry.getKey();
+                Double amt = entry.getValue();
+                double percentage = (amt / totalExpense) * 100;
+                rows.add(List.of(category, String.format("%.2f", amt), String.format("%.2f%%", percentage)));
+            }
+
+            addTable(doc, rows, List.of("Category", "Amount", "Percentage"));
+            doc.add(new Paragraph("Total Spent: " + totalExpense));
+            doc.close();
+
+            emailService.sendReportEmail(user.getEmail(), "Spending Trends Report - " + month, pdf.toByteArray());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate trends PDF", e);
         }
     }
 

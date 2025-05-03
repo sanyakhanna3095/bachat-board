@@ -113,6 +113,18 @@ public class ExpenseService {
                 updatedExpense.getCategory().getName()
         );
     }
+
+    public void deleteExpense(Long id, String token) {
+        User user = authUtil.getCurrentUser(token);
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Expense not found"));
+
+        if (!expense.getUser().getId().equals(user.getId())) {
+            throw new CustomException("Unauthorized");
+        }
+
+        expenseRepository.delete(expense);
+    }
 }
 
 
