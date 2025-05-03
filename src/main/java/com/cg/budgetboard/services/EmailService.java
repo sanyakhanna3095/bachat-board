@@ -22,7 +22,7 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("Budget Board <harshi766766@gmail.com>");
+            helper.setFrom("Budget Board <budgetboard04@gmail.com>");
             helper.setTo(toEmail);
             helper.setSubject("Forget Password OTP");
 
@@ -60,7 +60,7 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("Budget Board <harshi766766@gmail.com>");
+            helper.setFrom("Budget Board <budgetboard04@gmail.com>");
             helper.setTo(toEmail);
             helper.setSubject("Expense Alert From Budget Board");
 
@@ -96,7 +96,7 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("Budget Board <sakule76@gmail.com>");
+            helper.setFrom("Budget Board <budgetboard04@gmail.com>");
             helper.setTo(to);
             helper.setSubject(subject);
 
