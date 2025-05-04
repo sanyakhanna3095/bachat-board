@@ -70,7 +70,7 @@ public class IncomeService implements IncomeInterface{
     }
 
 
-    public Income updateIncome(Long incomeId, IncomeRequest incomeRequest, String token){
+    public IncomeResponse updateIncome(Long incomeId, IncomeRequest incomeRequest, String token){
         User user = authUtil.getCurrentUser(token);
 
         Income income = incomeRepository.findById(incomeId)
@@ -91,7 +91,8 @@ public class IncomeService implements IncomeInterface{
         income.setDate(incomeRequest.getDate());
         income.setCategory(category);
 
-        return incomeRepository.save(income);
+        Income updatedIncome= incomeRepository.save(income);
+        return new IncomeResponse(updatedIncome.getId(), updatedIncome.getAmount(),updatedIncome.getDate(), updatedIncome.getCategory().getName());
     }
 
     public void deleteIncome(Long incomeId, String token) {
