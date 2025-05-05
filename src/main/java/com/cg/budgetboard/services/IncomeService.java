@@ -99,10 +99,10 @@ public class IncomeService implements IncomeInterface{
         User user = authUtil.getCurrentUser(token);  // Retrieve the current logged-in user
 
         Income income = incomeRepository.findById(incomeId)
-                .orElseThrow(() -> new RuntimeException("Income not found"));
+                .orElseThrow(() -> new CustomException("Income not found"));
 
         if (!income.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized to delete this income.");
+            throw new CustomException("Unauthorized to delete this income.");
         }
 
         incomeRepository.delete(income);
